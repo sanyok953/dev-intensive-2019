@@ -13,76 +13,81 @@ object Utils {
         return firstName to lastName
     }
 
-    fun getLetter(le: String): String {
-        return when(le) {
-            "а"-> "a"
-            "б"-> "b"
-            "в"-> "v"
-            "г"-> "g"
-            "д"-> "d"
-            "е"-> "e"
-            "ё"-> "e"
-            "ж"-> "zh"
-            "з"-> "z"
-            "и"-> "i"
-            "й"-> "i"
-            "к"-> "k"
-            "л"-> "l"
-            "м"-> "m"
-            "н"-> "n"
-            "о"-> "o"
-            "п"-> "p"
-            "р"-> "r"
-            "с"-> "s"
-            "т"-> "t"
-            "у"-> "u"
-            "ф"-> "f"
-            "х"-> "h"
-            "ц"-> "c"
-            "ч"-> "ch"
-            "ш"-> "sh"
-            "щ"-> "sh'"
-            "ъ"-> ""
-            "ы"-> "i"
-            "ь"-> ""
-            "э"-> "e"
-            "ю"-> "yu"
-            "я"-> "ya"
-            "А"-> "A"
-            "Б"-> "B"
-            "В"-> "V"
-            "Г"-> "G"
-            "Д"-> "D"
-            "Е"-> "E"
-            "Ё"-> "E"
-            "Ж"-> "Zh"
-            "З"-> "Z"
-            "И"-> "I"
-            "Й"-> "I"
-            "К"-> "K"
-            "Л"-> "L"
-            "М"-> "M"
-            "Н"-> "N"
-            "О"-> "O"
-            "П"-> "P"
-            "Р"-> "R"
-            "С"-> "S"
-            "Т"-> "T"
-            "У"-> "U"
-            "Ф"-> "F"
-            "Х"-> "H"
-            "Ц"-> "W"
-            "Ч"-> "Ch"
-            "Ш"-> "Sh"
-            "Щ"-> "Sh'"
-            "Ъ"-> ""
-            "Ы"-> "I"
-            "Ь"-> ""
-            "Э"-> "E"
-            "Ю"-> "Yu"
-            "Я"-> "Ya"
-            else -> le
+    fun charTranslit(value: String): String? {
+        var charsMap = mutableMapOf<String, String>()
+        var resp: String? = null
+        charsMap.put("а", "a")
+        charsMap.put("б", "b")
+        charsMap.put("в", "v")
+        charsMap.put("г", "g")
+        charsMap.put("д", "d")
+        charsMap.put("е", "e")
+        charsMap.put("ё", "e")
+        charsMap.put("ж", "zh")
+        charsMap.put("з", "z")
+        charsMap.put("и", "i")
+        charsMap.put("й", "i")
+        charsMap.put("к", "k")
+        charsMap.put("л", "l")
+        charsMap.put("м", "m")
+        charsMap.put("н", "n")
+        charsMap.put("о", "o")
+        charsMap.put("п", "p")
+        charsMap.put("р", "r")
+        charsMap.put("с", "s")
+        charsMap.put("т", "t")
+        charsMap.put("у", "u")
+        charsMap.put("ф", "f")
+        charsMap.put("х", "h")
+        charsMap.put("ц", "c")
+        charsMap.put("ч", "ch")
+        charsMap.put("ш", "sh")
+        charsMap.put("щ", "sh'")
+        charsMap.put("ъ", "")
+        charsMap.put("ы", "i")
+        charsMap.put("ь", "")
+        charsMap.put("э", "e")
+        charsMap.put("ю", "yu")
+        charsMap.put("я", "ya")
+
+        charsMap.put("А", "A")
+        charsMap.put("Б", "B")
+        charsMap.put("В", "V")
+        charsMap.put("Г", "G")
+        charsMap.put("Д", "D")
+        charsMap.put("Е", "E")
+        charsMap.put("Ё", "E")
+        charsMap.put("Ж", "ZH")
+        charsMap.put("З", "Z")
+        charsMap.put("И", "I")
+        charsMap.put("Й", "I")
+        charsMap.put("К", "K")
+        charsMap.put("Л", "L")
+        charsMap.put("М", "M")
+        charsMap.put("Н", "N")
+        charsMap.put("О", "O")
+        charsMap.put("П", "P")
+        charsMap.put("Р", "R")
+        charsMap.put("С", "S")
+        charsMap.put("Т", "T")
+        charsMap.put("У", "U")
+        charsMap.put("Ф", "F")
+        charsMap.put("Х", "H")
+        charsMap.put("Ц", "C")
+        charsMap.put("Ч", "CH")
+        charsMap.put("Ш", "SH")
+        charsMap.put("Щ", "SH'")
+        charsMap.put("Ъ", "")
+        charsMap.put("Ы", "I")
+        charsMap.put("Ь", "")
+        charsMap.put("Э", "E")
+        charsMap.put("Ю", "YU")
+        charsMap.put("Я", "YA")
+
+        if (charsMap.containsKey(value)) {
+            resp = charsMap.getValue(value)
         }
+        return resp
     }
 
     fun skl(digit: Long, type: Int): String {
@@ -121,14 +126,17 @@ object Utils {
     }
 
     fun transliteration(payload: String, divider: String = " "): String {
-        val name = payload.split(" ")
-        var n1 = ""
-        var n2 = ""
-        for(i in name[0])
-            n1 += getLetter(i.toString())
-        for(i in name[1] )
-            n2 += getLetter(i.toString())
-        return "$n1$divider$n2"
+        var trString = ""
+        for (c in payload) {
+            if (c.toString() == " ") {
+                trString += divider
+            } else if (charTranslit(c.toString()) != null) {
+                trString += charTranslit(c.toString())
+            } else {
+                trString += c.toString()
+            }
+        }
+        return trString
     }
 
     fun toInitials(firstName: String?, lastName: String?): String? {
