@@ -1,5 +1,6 @@
 package ru.skillbranch.devintensive.extensions
 
+import ru.skillbranch.devintensive.utils.Utils
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -16,7 +17,7 @@ fun Date.format(pattern: String = "HH:mm:ss dd.MM.yy"): String {
 fun Date.add(value: Int, units: TimeUnits = TimeUnits.SECOND): Date {
     var time = this.time
 
-    time += when(units) {
+    time += when (units) {
         TimeUnits.SECOND -> value * SECOND
         TimeUnits.MINUTE -> value * MINUTE
         TimeUnits.HOUR -> value * HOUR
@@ -26,13 +27,75 @@ fun Date.add(value: Int, units: TimeUnits = TimeUnits.SECOND): Date {
     return this
 }
 
-fun Date.humanizeDiff(daet: Date = Date()): String {
-    return this.toString()
+fun Date.humanizeDiff(date: Date = Date()): String {
+    val date1 = this.time
+    val date2 = date.time
+    val dtd = date2 - date1
+
+    val dd = when {
+        dtd >= (360 * DAY) -> "более года назад"
+        dtd >= DAY + (2 * HOUR) && dtd < DAY * 360 -> "${dtd / DAY} ${
+            Utils.skl(
+                dtd / DAY,
+                3
+            )
+        } назад"
+        dtd >= DAY - (2 * HOUR) && dtd < DAY + (2 * HOUR) -> "день назад"
+        dtd >= 75 * MINUTE && dtd < DAY - (2 * HOUR) -> "${dtd / HOUR} ${
+            Utils.skl(
+                dtd / HOUR,
+                2
+            )
+        } назад"
+        dtd >= 45 * MINUTE && dtd < 75 * MINUTE -> "час назад"
+        dtd >= 75 * SECOND && dtd < 45 * MINUTE -> "${dtd / MINUTE} ${
+            Utils.skl(
+                dtd / MINUTE,
+                1
+            )
+        } назад"
+        dtd >= 45 * SECOND && dtd < 75 * SECOND -> "минуту назад"
+        dtd >= 1 * SECOND && dtd < 45 * SECOND -> "несколько секунд назад"
+        dtd < SECOND -> "только что"
+        else -> ""
+    }
+    return dd
 }
 
 enum class TimeUnits {
     SECOND,
     MINUTE,
     HOUR,
-    DAY
+    DAY;
+
+    fun plural(value: Int): String {
+        return value.toString() + " " +
+            when {
+                this == SECOND -> when {
+                    value != 11 && value % 10 == 1 -> "секунду"
+                    value > 4 && (value in 5..20 || value % 10 in 5..9 || value % 10 == 0) -> "секунд"
+                    else -> "секунды"
+                }
+
+                this == MINUTE -> when {
+                    value != 11 && value % 10 == 1 -> "минуту"
+                    value > 4 && (value in 5..20 || value % 10 in 5..9 || value % 10 == 0) -> "минут"
+                    else -> "минуты"
+                }
+
+                this == HOUR -> when {
+                    value != 11 && value % 10 == 1 -> "час"
+                    value > 4 && (value in 5..20 || value % 10 in 5..9 || value % 10 == 0) -> "часов"
+                    else -> "часа"
+                }
+
+                this == DAY -> when {
+                    value != 11 && value % 10 == 1 -> "день"
+                    value > 4 && (value in 5..20 || value % 10 in 5..9 || value % 10 == 0) -> "дней"
+                    else -> "дня"
+                }
+
+                else -> ""
+            }
+    }
 }
