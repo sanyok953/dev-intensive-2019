@@ -5,6 +5,7 @@ import java.util.*
 object Utils {
 
     fun parseFullName(fullName: String?) : Pair<String?, String?> {
+        if(fullName == "" || fullName == " ") return null to null
         val parts: List<String>? = fullName?.split(" ")
 
         val firstName = parts?.getOrNull(0)
@@ -80,7 +81,7 @@ object Utils {
             "Э"-> "E"
             "Ю"-> "Yu"
             "Я"-> "Ya"
-            else -> ""
+            else -> le
         }
     }
 
@@ -136,6 +137,8 @@ object Utils {
             name = null
         else if (firstName != null && lastName == null && !firstName.isBlank())
             name = firstName[0].toString().toUpperCase()
+        else if (firstName == null && lastName != null && !lastName.isBlank())
+            name = lastName[0].toString().toUpperCase()
         else if (firstName != null && lastName != null) {
             if (firstName.isBlank() && lastName.isBlank())
                 name = null;
