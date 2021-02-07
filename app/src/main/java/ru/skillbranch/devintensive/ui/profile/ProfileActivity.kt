@@ -91,7 +91,7 @@ class ProfileActivity : AppCompatActivity() {
         et_repository.afterTextChanged {
             isCorrectRepo = true
             if (!Utils.validateRepoName(it)) {
-                wr_repository.error = "Адрес репозитория не валидный"
+                wr_repository.error = "Невалидный адрес репозитория"
                 isCorrectRepo = false
             } else{
                 wr_repository.error = ""
