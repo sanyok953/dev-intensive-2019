@@ -4,14 +4,30 @@ import java.util.*
 
 object Utils {
 
-    fun parseFullName(fullName: String?) : Pair<String?, String?> {
-        if(fullName == "" || fullName == " ") return null to null
+    fun parseFullName(fullName: String?): Pair<String?, String?> {
+        if (fullName == "" || fullName == " ") return null to null
         val parts: List<String>? = fullName?.split(" ")
 
         val firstName = parts?.getOrNull(0)
         val lastName = parts?.getOrNull(1)
         return firstName to lastName
     }
+
+    val exlude_list = listOf(
+        "enterprise",
+        "features",
+        "topics",
+        "collections",
+        "trending",
+        "events",
+        "marketplace",
+        "pricing",
+        "nonprofit",
+        "customer-stories",
+        "security",
+        "login",
+        "join"
+    )
 
     fun charTranslit(value: String): String? {
         var charsMap = mutableMapOf<String, String>()
@@ -90,14 +106,51 @@ object Utils {
         return resp
     }
 
-    fun skl(digit: Long, type: Int): String {
-        val array1 : Array<String> = arrayOf("минуту", "минуты", "минут")
-        val array2 : Array<String> = arrayOf("час", "часа", "часов")
-        val array3 : Array<String> = arrayOf("день", "дня", "дней")
-        val array4 : Array<String> = arrayOf("секунда", "секунды", "секунд")
 
-        val array: Array<String> = if (type == 1) array1 else if (type == 2) array2 else if (type == 3) array3 else array4
-        return when(sklCheck(digit)) {
+    fun validateRepoName(name: String?): Boolean {
+
+        if (name.isNullOrBlank())
+            return true
+
+        var name_ = name.trim();
+        if (name.takeLast(1) == "/") {
+            name_ = name_.substring(0, name_.length - 1)
+        }
+        val prefix = when {
+            name_.startsWith(
+                "https://www.github.com/",
+                ignoreCase = true
+            ) -> "https://www.github.com/"
+            name_.startsWith("https://github.com/", ignoreCase = true) -> "https://github.com/"
+            name_.startsWith(
+                "http://www.github.com/",
+                ignoreCase = true
+            ) -> "http://www.github.com/"
+            name_.startsWith("http://github.com/", ignoreCase = true) -> "http://github.com/"
+            name_.startsWith("www.github.com/", ignoreCase = true) -> "www.github.com/"
+            name_.startsWith("github.com/", ignoreCase = true) -> "github.com/"
+            else -> "-"
+        }
+
+        if (prefix.length > 5) {
+            val user = name_.substring(prefix.length)
+            if (user.contains("/", ignoreCase = true) || user.contains(" ", ignoreCase = true))
+                return false;
+            if (user !in exlude_list)
+                return true
+        }
+        return false
+    }
+
+    fun skl(digit: Long, type: Int): String {
+        val array1: Array<String> = arrayOf("минуту", "минуты", "минут")
+        val array2: Array<String> = arrayOf("час", "часа", "часов")
+        val array3: Array<String> = arrayOf("день", "дня", "дней")
+        val array4: Array<String> = arrayOf("секунда", "секунды", "секунд")
+
+        val array: Array<String> =
+            if (type == 1) array1 else if (type == 2) array2 else if (type == 3) array3 else array4
+        return when (sklCheck(digit)) {
             1L -> array[0]
             2L, 3L, 4L -> array[1]
             else -> array[2]
@@ -115,7 +168,10 @@ object Utils {
                     f = l
                     l = i.toString()
                 }
-                if ((f+l).contains("11") || ("$f$l").contains("12") || ("$f$l").contains("13") || ("$f$l").contains("14")) {
+                if ((f + l).contains("11") || ("$f$l").contains("12") || ("$f$l").contains("13") || ("$f$l").contains(
+                        "14"
+                    )
+                ) {
                     return 8L
                 }
             }
@@ -141,7 +197,7 @@ object Utils {
 
     fun toInitials(firstName: String?, lastName: String?): String? {
         var name: String? = ""
-        if(firstName == null && lastName == null)
+        if (firstName == null && lastName == null)
             name = null
         else if (firstName != null && lastName == null && !firstName.isBlank())
             name = firstName[0].toString().toUpperCase()
