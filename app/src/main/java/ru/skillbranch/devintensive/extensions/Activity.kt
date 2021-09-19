@@ -11,8 +11,8 @@ import android.opengl.ETC1.getHeight
 
 fun Activity.hideKeyboard() {
     val imm = this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-    val view: View = this.currentFocus
-    imm.hideSoftInputFromWindow(view.windowToken, 0)
+    val view: View? = this.currentFocus
+    imm.hideSoftInputFromWindow(view?.windowToken, 0)
 }
 
 fun Activity.isKeyboardOpen(): Boolean {
