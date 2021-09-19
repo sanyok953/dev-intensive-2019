@@ -92,6 +92,7 @@ class ProfileActivity : AppCompatActivity() {
                 v.text = it[k].toString()
             }
         }
+        updateAvatar(profile)
     }
 
     private fun initViews(savedInstanceState: Bundle?) {
@@ -153,6 +154,11 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun getInitials(fn: String, ln: String): String {
         return Utils.toInitials(fn, ln) ?: ""
+    }
+
+    private fun updateAvatar(profile: Profile){
+        val initials = Utils.toInitials(profile.firstName, profile.lastName)
+        iv_avatar.generateAvatar(initials, 48, theme)
     }
 
     private fun showCurrentMode(isEdit: Boolean) {

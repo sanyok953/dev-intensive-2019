@@ -2,11 +2,15 @@ package ru.skillbranch.devintensive.ui.custom
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.widget.ImageView.ScaleType.CENTER_CROP
+import android.widget.ImageView.ScaleType.CENTER_INSIDE
 import android.net.Uri
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.widget.ImageView
 import androidx.annotation.ColorRes
 import androidx.annotation.Dimension
@@ -38,6 +42,11 @@ class CircleImageView @JvmOverloads constructor(context: Context, attrs: Attribu
     private var cvBitmap: Bitmap? = null
     private var cvBitmapShader: BitmapShader? = null
     private var isInit = false
+
+    private var defaultBitmap: Bitmap? = null
+    private var text: String? = null
+    private var bitmap: Bitmap? = null
+    private var paint: Paint = Paint().apply { isAntiAlias = true }
 
     init {
         if (attrs != null) {
@@ -153,6 +162,99 @@ class CircleImageView @JvmOverloads constructor(context: Context, attrs: Attribu
         bounds!!.set(left, top, left+diameter, top + diameter)
     }
 
+    fun generateAvatar(text: String?, sizeSp: Int, theme: Resources.Theme) {
+        if (defaultBitmap == null) {
+            defaultBitmap = loadBitmap(drawable)
+        }
+        if (text != this.text){
+            val image = when(text) {
+                null -> defaultBitmap
+                else -> generateLetterAvatar(text, sizeSp, theme)
+            }
+
+            this.text = text
+            setImageBitmap(image)
+        }
+    }
+
+    private fun generateLetterAvatar(text: String, sizeSp: Int, theme: Resources.Theme): Bitmap {
+        return colored(R.attr.colorAccent, theme).apply {
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+            paint.textSize = spToPixels(sizeSp)
+            paint.color = Color.WHITE
+            paint.textAlign = Paint.Align.CENTER
+
+            val textBounds = Rect()
+            paint.getTextBounds(text, 0, text.length, textBounds)
+
+            val backgroundBounds = RectF()
+            backgroundBounds.set(0f, 0f, layoutParams.height.toFloat(), layoutParams.height.toFloat())
+
+            val textBottom = backgroundBounds.centerY() - textBounds.exactCenterY()
+            val canvas = Canvas(this)
+            canvas.drawText(text, backgroundBounds.centerX(), textBottom, paint)
+        }
+    }
+
+    private fun colored(colorId: Int, theme: Resources.Theme): Bitmap {
+        val image = Bitmap.createBitmap(layoutParams.height, layoutParams.height, Bitmap.Config.ARGB_8888)
+        val color = TypedValue()
+        theme.resolveAttribute(colorId, color, true)
+
+        val canvas = Canvas(image)
+        canvas.drawColor(color.data)
+
+        return image
+    }
+
+    private fun loadBitmap(drawable: Drawable?): Bitmap? =
+        when (drawable) {
+            null -> null
+            is BitmapDrawable -> drawable.bitmap
+            else -> Bitmap.createBitmap(
+                drawable.intrinsicWidth,
+                drawable.intrinsicHeight,
+                Bitmap.Config.ARGB_8888
+            ).also {
+                val canvas = Canvas(it)
+                drawable.setBounds(0, 0, canvas.width, canvas.height)
+                drawable.draw(canvas)
+            }
+        }.also { updateShader() }
+
+    private fun updateShader() {
+        bitmap?.also {
+            val shader = BitmapShader(it, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+            var scale = 0F
+            var dx = 0F
+            var dy = 0F
+
+            when (scaleType) {
+                CENTER_CROP -> if (it.width * height > width * it.height) {
+                    scale = height / it.height.toFloat()
+                    dx = (width - it.width * scale) * 0.5f
+                } else {
+                    scale = width / it.width.toFloat()
+                    dy = (height - it.height * scale) * 0.5f
+                }
+                CENTER_INSIDE -> if (it.width * height < width * it.height) {
+                    scale = height / it.height.toFloat()
+                    dx = (width - it.width * scale) * 0.5f
+                } else {
+                    scale = width / it.width.toFloat()
+                    dy = (height - it.height * scale) * 0.5f
+                }
+            }
+
+            shader.setLocalMatrix(Matrix().apply {
+                setScale(scale, scale)
+                postTranslate(dx, dy)
+            })
+
+            paint.shader = shader
+        }
+    }
+
     override fun onDraw(canvas: Canvas?) {
         drawBitmap(canvas)
         drawStroke(canvas)
@@ -188,3 +290,5 @@ class CircleImageView @JvmOverloads constructor(context: Context, attrs: Attribu
             canvas!!.drawOval(borderBounds, borderDraw)
     }
 }
+
+private fun spToPixels(sp: Int)= sp * Resources.getSystem().displayMetrics.scaledDensity
