@@ -81,10 +81,10 @@ class ProfileActivity : AppCompatActivity() {
                 .buildRound(initials, color)*/
             val drawable = BitmapDrawable(resources, Utils.generateAvatar(App.applicationContext(), 112, initials, col = color))
             iv_avatar.setImageDrawable(drawable)
-            iv_avatar.setupBitmap()
+            //iv_avatar.setupBitmap()
         } else {
             iv_avatar.setImageDrawable(R.drawable.avatar_default.toDrawable())
-            iv_avatar.setupBitmap()
+            //iv_avatar.setupBitmap()
         }
 
         profile.toMap().also {
