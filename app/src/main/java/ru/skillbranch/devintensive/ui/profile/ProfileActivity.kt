@@ -69,7 +69,7 @@ class ProfileActivity : AppCompatActivity() {
         //Log.d("M_ProfileActivity", getInitials(profile.firstName, profile.lastName))
 
 
-        val initials = Utils.toInitials(profile.firstName, profile.lastName)
+        /*val initials = Utils.toInitials(profile.firstName, profile.lastName)
         if (initials != null) {
             val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
             val color = if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
@@ -77,15 +77,15 @@ class ProfileActivity : AppCompatActivity() {
             } else {
                 resources.getColor(R.color.color_accent, theme)
             }
-            /*val drawable = TextDrawable.builder()
-                .buildRound(initials, color)*/
+            //val drawable = TextDrawable.builder()
+                //.buildRound(initials, color)
             val drawable = BitmapDrawable(resources, Utils.generateAvatar(App.applicationContext(), 112, initials, col = color))
             iv_avatar.setImageDrawable(drawable)
             //iv_avatar.setupBitmap()
         } else {
             iv_avatar.setImageDrawable(R.drawable.avatar_default.toDrawable())
             //iv_avatar.setupBitmap()
-        }
+        }*/
 
         profile.toMap().also {
             for ((k, v) in viewFields) {
