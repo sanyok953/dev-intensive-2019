@@ -7,9 +7,6 @@ import ru.skillbranch.devintensive.R
 import kotlin.math.round
 
 object Utils {
-
-
-
     val exlude_list = listOf(
         "enterprise",
         "features",

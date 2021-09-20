@@ -43,10 +43,10 @@ class CircleImageView @JvmOverloads constructor(context: Context, attrs: Attribu
     private var cvBitmapShader: BitmapShader? = null
     private var isInit = false
 
-    private var defaultBitmap: Bitmap? = null
+    /*private var defaultBitmap: Bitmap? = null
     private var text: String? = null
     private var bitmap: Bitmap? = null
-    private var paint: Paint = Paint().apply { isAntiAlias = true }
+    private var paint: Paint = Paint().apply { isAntiAlias = true }*/
 
     init {
         if (attrs != null) {
@@ -162,7 +162,7 @@ class CircleImageView @JvmOverloads constructor(context: Context, attrs: Attribu
         bounds!!.set(left, top, left+diameter, top + diameter)
     }
 
-    fun generateAvatar(text: String?, sizeSp: Int, theme: Resources.Theme) {
+    /*fun generateAvatar(text: String?, sizeSp: Int, theme: Resources.Theme) {
         if (defaultBitmap == null) {
             defaultBitmap = loadBitmap(drawable)
         }
@@ -175,9 +175,9 @@ class CircleImageView @JvmOverloads constructor(context: Context, attrs: Attribu
             this.text = text
             setImageBitmap(image)
         }
-    }
+    }*/
 
-    private fun generateLetterAvatar(text: String, sizeSp: Int, theme: Resources.Theme): Bitmap {
+    /*private fun generateLetterAvatar(text: String, sizeSp: Int, theme: Resources.Theme): Bitmap {
         return colored(R.attr.colorAccent, theme).apply {
             val paint = Paint(Paint.ANTI_ALIAS_FLAG)
             paint.textSize = spToPixels(sizeSp)
@@ -253,7 +253,7 @@ class CircleImageView @JvmOverloads constructor(context: Context, attrs: Attribu
 
             paint.shader = shader
         }
-    }
+    }*/
 
     override fun onDraw(canvas: Canvas?) {
         drawBitmap(canvas)
@@ -291,4 +291,4 @@ class CircleImageView @JvmOverloads constructor(context: Context, attrs: Attribu
     }
 }
 
-private fun spToPixels(sp: Int)= sp * Resources.getSystem().displayMetrics.scaledDensity
+//private fun spToPixels(sp: Int)= sp * Resources.getSystem().displayMetrics.scaledDensity

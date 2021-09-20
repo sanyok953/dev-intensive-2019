@@ -156,10 +156,10 @@ class ProfileActivity : AppCompatActivity() {
         return Utils.toInitials(fn, ln) ?: ""
     }
 
-    private fun updateAvatar(profile: Profile){
+    /*private fun updateAvatar(profile: Profile){
         val initials = Utils.toInitials(profile.firstName, profile.lastName)
         iv_avatar.generateAvatar(initials, 48, theme)
-    }
+    }*/
 
     private fun showCurrentMode(isEdit: Boolean) {
         val info = viewFields.filter{ setOf("firstName","lastName","about","repository").contains(it.key) }
