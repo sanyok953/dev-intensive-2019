@@ -34,9 +34,9 @@ class AvatarImageView @JvmOverloads constructor(
         "#EE7AAE"
     )
 
-    fun setInitials(initials: String) {
+    /*fun setInitials(initials: String) {
         setImageDrawable(BitmapDrawable(resources, Utils.generateAvatar(context, 40, initials, 1)) )
-    }
+    }*/
 
     companion object {
         private const val DEFAULT_BORDER_WIDTH = 2f
