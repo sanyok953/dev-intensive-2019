@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.util.TypedValue
 import ru.skillbranch.devintensive.R
+import java.util.*
 import kotlin.math.round
 
 object Utils {
@@ -24,7 +25,7 @@ object Utils {
     )
 
     fun charTranslit(value: String): String? {
-        var charsMap = mutableMapOf<String, String>()
+        val charsMap = mutableMapOf<String, String>()
         var resp: String? = null
         charsMap.put("а", "a")
         charsMap.put("б", "b")
@@ -106,7 +107,7 @@ object Utils {
         if (name.isNullOrBlank())
             return true
 
-        var name_ = name.trim();
+        var name_ = name.trim()
         if (name.takeLast(1) == "/") {
             name_ = name_.substring(0, name_.length - 1)
         }
@@ -129,7 +130,7 @@ object Utils {
         if (prefix.length > 5) {
             val user = name_.substring(prefix.length)
             if (user.contains("/", ignoreCase = true) || user.contains(" ", ignoreCase = true))
-                return false;
+                return false
             if (user !in exlude_list)
                 return true
         }
@@ -142,10 +143,10 @@ object Utils {
             return null to null
         }
 
-        var parts: List<String>? = fullName?.split(" ")
+        val parts: List<String> = fullName.split(" ")
 
-        var firstName = parts?.getOrNull(0)
-        var lastName = parts?.getOrNull(1)
+        val firstName = parts.getOrNull(0)
+        val lastName = parts.getOrNull(1)
 
         return firstName to lastName
     }
@@ -219,31 +220,19 @@ object Utils {
         var initL: String? = null
 
         if (firstName != null && firstName != " " && firstName != "") {
-            if (firstName != null) {
                 for (c in firstName) {
-                    if (c.toString() != null) {
-                        initF = c.toString().toUpperCase()
-                    } else {
-                        initF = null
-                    }
+                        initF = c.toString().toUpperCase(Locale.ROOT)
                     break
                 }
-            }
         } else {
             initF = null
         }
 
         if (lastName != null && lastName != " " && lastName != "") {
-            if (lastName != null) {
                 for (ch in lastName) {
-                    if (ch.toString() != null) {
-                        initL = ch.toString().toUpperCase()
-                    } else {
-                        initL = null
-                    }
+                        initL = ch.toString().toUpperCase(Locale.ROOT)
                     break
                 }
-            }
         } else {
             initL = null
         }
@@ -254,7 +243,7 @@ object Utils {
         else return "$initF$initL"
     }
 
-    fun generateAvatar(ctx: Context, imgSize: Int, text: String, col: Int): Bitmap {
+    /*fun generateAvatar(ctx: Context, imgSize: Int, text: String, col: Int): Bitmap {
 
         //val imgSize = ctx.resources.getDimensionPixelSize(R.dimen.avatar_round_size)
 
@@ -288,7 +277,6 @@ object Utils {
         }
         resColor.recycle()
         return bitmap
-
-    }
+    }*/
 
 }
